@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JSON Examples</title>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+    var lannister = ["Tywin", "Joanna", "Cersei", "Jaime", "Joffrey", "Myrcella", "Tomme", "Tyrion"];
+    // var p = lannister[0];
+    // lannister[0] = "Personnage";
+    // lannister.length; lannister.push('Personnage'); ...
+
+    var maison_lanister = {"members": lannister, "count": 8};
+    var maisons = {"lannister" : maison_lanister, "stark": {"members": ["Ned", "Catelyn", "Robb", "Sansa", "Arya", "Bran", "Rickon"], "count": 7}}
+
+    var character_string = '{ "name":"Tyrion", "age":39, "city":"Kings Landing" }';
+    var character_object = JSON.parse(character_string);
+
+  </script>
+</head>
+<body>
+
+<script type="text/javascript">
+  // qui est ?
+  document.write('1) Qui est-ce ? ' + maison_lanister.members[3] + '<br/>');
+  document.write('2) Qui est-ce ? ' + maisons.stark.members[4] + '<br/>');
+  document.write('3) Qui est-ce ? ' + character_object.name + '<br/>'); 
+</script>
+
+</body>
+</html>

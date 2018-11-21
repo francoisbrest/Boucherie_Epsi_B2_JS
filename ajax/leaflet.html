@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>map</title>
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+   integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+   crossorigin=""/>
+  
+  
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+   integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+   crossorigin=""></script>
+
+  <style type="text/css">
+   #mapid { 
+    height: 600px;
+  </style>
+</head>
+<body>
+<div id="mapid"></div>
+<script type="text/javascript">
+    var map = L.map('mapid').setView([48.866667, 2.333333], 13);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    var greenIcon = L.icon({
+        iconUrl: 'leaf-green.png',
+        shadowUrl: 'leaf-shadow.png',
+        iconSize:     [38, 95], 
+        shadowSize:   [50, 64], 
+        iconAnchor:   [22, 94], 
+        shadowAnchor: [4, 62],  
+        popupAnchor:  [-3, -76] 
+    });
+    function loadData() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          aff(this);
+        }
+      };
+
+      xhttp.open("GET", 'https://opendata.paris.fr/api/records/1.0/search/?dataset=etablissements-scolaires&facet=id_projet&facet=arr_libelle&facet=arr_insee', true);
+      xhttp.send();
+    }
+</script>
+<button onclick="test()">Test</button>
+<button onclick="loadData()">Afficher</button>
+<script type="text/javascript">
+  
+  function test()
+  {
+    var test = L.marker([48.866667, 2.333333]).addTo(map);
+    test.bindPopup("<b>Test</b><br>I am a test.").openPopup();
+  }
+  function aff(xml)
+  {
+    var doc = xml.responseText;
+    let i = 0;
+    var x = JSON.parse(doc);
+    console.log(x.records[i]);
+    while (i < x.records.length)
+    {
+      var test = L.marker(x.records[i].fields.geo_point_2d).addTo(map);
+      test.bindPopup(x.records[i].fields.adresse);
+      i++;
+    }
+  }
+</script>
+</body>
+</html>

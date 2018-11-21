@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Classes JS</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		html, body {
+			padding: 0px;
+			margin: 0px;
+			height: 100%;
+			width: 100%;
+			background-color: black;
+		}
+
+		body {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		canvas {
+			background-color: black;
+			border: 1px solid white;
+		}
+	</style>
+</head>
+<body>
+
+<canvas id="canvasParticules"></canvas>
+<script type="text/javascript">
+
+class Vector {
+	constructor(X, Y)
+	{
+		this.x = X;
+		this.y = Y;
+	}
+	
+	add(nv)
+	{
+		this.x += nv.x;
+		this.y += nv.y;
+	}
+
+	magnitude()
+	{
+		return (Math.sqrt((this.x * this.x) + (this.y * this.y)));
+	}
+
+	angle()
+	{
+		return(Math.atan2(this.y, this.x));
+	}
+
+	static fromAngle(angle, magnitude)
+	{
+		return new Vector(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
+	}
+
+}
+
+
+class particule
+{
+	constructor(pos, vit, acc)
+	{
+		this.position = pos || new Vector(0, 0);
+		this.vitesse = vit || new Vector(0, 0);
+		this.acceleration = acc || new Vector(0, 0);
+	}
+
+	move()
+	{
+		this.vitesse.add(this.acceleration);
+		this.position.add(this.vitesse);
+	}
+}
+
+
+class Emitter
+{
+	constructor(pos, vit, color, spr)
+	{
+		this.position = pos;
+		this.velocity = vit;
+		this.drawColor = color;
+		this.spread = spr || Math.PI/32;
+	}
+
+	emitParticle()
+	{
+		var angle = this.velocity.angle() + this.spread - (Math.random() * this.spread * 2);
+		var magnitude = this.velocity.magnitude();
+		var velo = Vector.fromAngle(angle, magnitude);
+
+		var position = new Vector(this.position.x, this.position.y);
+		return new particule(position, velo);
+	}
+}
+
+
+
+// Représente un système de particules
+class ParticuleSystem {
+	constructor(canvasId, maxParticules, colorParticles, emiterRate) {
+
+		// informations sur le canvas et récupération du context 2d
+		this.canvas = document.getElementById(canvasId);
+		this.canvas.width = window.innerWidth/2;
+		this.canvas.height = window.innerHeight/2;
+		this.ctx = this.canvas.getContext('2d');
+
+		// information sur les particules, dont tableau des particules
+		this.maxParticles = maxParticules;
+		this.particles = [];
+		this.particleSize = 1;
+		this.colorParticles = colorParticles;
+
+		// information sur les points d'émission, dont le tableau des emetteurs
+		this.emitters = [];
+		this.emissionRate = emiterRate;
+		this.emiterSize = 5;
+	}
+
+	// ajouter un emetteur de particules
+	addEmitter(emitter) {
+		this.emitters.push(emitter);
+	}
+
+	// boucle principale 
+	loop() {
+		// nettoye le canvas
+		this.clear();
+		// met à jour le modèle 
+		this.update();
+		// dessine les particules
+		this.draw();
+		// rafraichit le navigateur
+		this.queue();
+	}
+
+	clear() {
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	}
+
+	update() {
+		// ajoute de nouvelles particules
+		this.addNewParticles();
+		// dessine les particules existantes
+	  	this.plotParticles(this.canvas.width, this.canvas.height);
+	}
+
+	draw() {
+	  // dessine les particules sur le canvas
+	  this.drawParticles();
+	  // affiche les emetteurs
+	  this.emitters.forEach(this.drawCircle.bind(this));
+	}
+
+	queue() {
+		// demande de rafraichissement du navigateur
+  		window.requestAnimationFrame(this.loop.bind(this));
+	}
+
+	addNewParticles() {
+		// Pour ne pas dépasser le nombre maximum de particules
+	  	if (this.particles.length > this.maxParticles) return;
+
+	  	// Pour tous les emetteur
+	  	for (var i = 0; i < this.emitters.length; i++) {
+	  		var emiter = this.emitters[i];
+	  		// Autant de fois que défini par le taux d'émission de l'emetteur
+	      	for (var j = 0; j < this.emissionRate; j++) {
+	      		// ajouter une particule dans le tableau des particules
+      			this.particles.push(emiter.emitParticle());
+    		}
+    	}
+	}
+
+	plotParticles(boundsX, boundsY) {
+	  var currentParticles = [];
+	  
+	  // Pour chaque particule
+	  for (var i = 0; i < this.particles.length; i++) {
+	    var particle = this.particles[i];
+	    var pos = particle.position;
+	    if (pos.x < 0 || pos.x > boundsX || pos.y < 0 || pos.y > boundsY) continue;
+	    // déplacer la particule
+	    particle.move();
+	    // met à jour le tableau des particules visibles
+	    currentParticles.push(particle);
+	  }
+	  
+	  this.particles = currentParticles;
+	}
+
+	drawParticles() {
+	  	this.ctx.fillStyle = this.colorParticles;
+	  	// Pour chaque particule	
+	  	for (var i = 0; i < this.particles.length; i++) {
+	  		// Dessiner la particule
+	    	var position = this.particles[i].position;
+	    	this.ctx.fillRect(position.x, position.y, this.particleSize, this.particleSize);
+	  	}
+	}
+
+	drawCircle(object) {
+	  	this.ctx.fillStyle = object.drawColor;
+	  	this.ctx.beginPath();
+	  	this.ctx.arc(object.position.x, object.position.y, this.emiterSize, 0, Math.PI * 2);
+	  	this.ctx.closePath();
+	  	this.ctx.fill();
+	}
+}
+
+var ps = new ParticuleSystem("canvasParticules", 10000, 'rgba(255,255,255, 0.5)', 100);
+var emitter1 = new Emitter(new Vector(ps.canvas.width/4, ps.canvas.height/2), Vector.fromAngle(0, 2), "#FFF");
+var emitter2 = new Emitter(new Vector(3*ps.canvas.width/4, ps.canvas.height/2), Vector.fromAngle(2, 1), "#FFF", Math.PI);
+ps.addEmitter(emitter1);
+ps.addEmitter(emitter2);
+ps.loop();
+
+</script>
+</body>
+</html>

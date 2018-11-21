@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript">
+		function setup()
+		{
+			if (typeof(Storage) !== "undefined")
+			{
+			    console.log("webstorage suporte");
+			    if (localStorage.text != "local:modifie")
+			   		localStorage.text = "local:vide";
+			   	if (sessionStorage.text != "session:modifie")
+			    	sessionStorage.text = "session:vide";
+			} else {
+			    console.log("webstorage non suporte");
+			}
+		}
+		function aff_local()
+		{
+			console.log(localStorage.text);
+		}
+		function aff_ses()
+		{
+			console.log(sessionStorage.text);
+		}
+		function set_local()
+		{
+			localStorage.text = "local:modifie";
+		}
+		function set_ses()
+		{
+			sessionStorage.text = "session:modifie";
+		}
+	</script>
+</head>
+<body onload="setup()">
+	<div>
+		Local
+		<br><button onclick="aff_local()">afficher</button>
+		<button onclick="set_local()">modifier</button>
+	</div>
+	<br>
+	<div>
+		Session
+		<br><button onclick="aff_ses()">afficher</button>
+		<button onclick="set_ses()">modifier</button>
+	</div>
+</body>
+</html>

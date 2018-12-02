@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link href="style.css" type="text/css" rel="stylesheet" />
+  <title>Sujet Numero 2</title>
+</head>
+<body>
+  <div id="app">
+    <h1>{{ appTitle }}</h1>
+    <p>{{ informations }}</p>
+    <div v-if="!connected">
+      <input v-model="username" placeholder="Insert username">
+      <input v-model="password" v-on:keyup.enter="createUser" placeholder="Insert password" type="password">
+      <button v-on:click="createUser">Create</button>
+    </div>
+    <div v-if="!connected">
+      <input v-model="connectUsername" placeholder="Insert username">
+      <input v-model="connectPassword" v-on:keyup.enter="connect" placeholder="Insert password" type="password">
+      <button v-on:click="connect">Connect</button>
+    </div>
+    <div v-if="connected">
+      You are evaluating: <h2>{{ toEvaluate }}</h2>
+      <input v-model="grade" placeholder="insert grade" v-on:keyup.enter="evaluate">
+      <button v-on:click="evaluate">Evaluate</button>
+      <div>
+        <button v-on:click="disconnect">Disconnect</button>
+      </div>
+    </div>
+    <div>
+      <button v-on:click="getResults">Get results</button>
+    </div>
+    <ul>
+      <li v-for="student in students">
+        {{ student.name }}
+        <ul>
+          <li v-for="note in student.data.grades">
+            {{ note }}
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <button v-on:click="moyenne">wala</button>
+  </div>
+  <script src="libraries/jquery.js"></script>
+  <script src="libraries/vue.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

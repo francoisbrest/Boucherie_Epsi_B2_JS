@@ -1,0 +1,19 @@
+{
+  "name": "miniprojet",
+  "version": "0.1.0",
+  "description": "Version approfondie du mini projet car nous avons eu plus de temps pour le terminer",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Courtes, Goulven, Benoxiid",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "d3": "^5.7.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "node-persist": "^2.1.0",
+    "session-file-store": "^1.2.0",
+    "validator": "^10.9.0"
+  }
+}

@@ -1,0 +1,10 @@
+Ce dossier contient le mini-projet sujet 2
+
+procédure de démarrage :
+ouvrir un bash dans le dossier mini-projet
+exécuter les commandes : 
+	npm install
+	node app.js
+Windows vous demandra d'autoriser l'application, répondez oui.
+
+tapez "localhost:3000" sur un navigateur

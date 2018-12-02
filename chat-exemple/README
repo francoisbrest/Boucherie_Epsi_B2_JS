@@ -1,0 +1,8 @@
+Procédure d'utilisation
+
+ouvrir node prompt
+aller dans le dossier de l'exo (ou est situé index.js) avec la commande cd 
+utilisé la commande : node index.js
+
+maintenant ouvrer le fichier index.html
+Vous voila sur un tchat fonctionnel

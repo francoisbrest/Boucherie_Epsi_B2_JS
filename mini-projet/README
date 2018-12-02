@@ -5,6 +5,6 @@ ouvrir un bash dans le dossier mini-projet
 exécuter les commandes : 
 	npm install
 	node app.js
-Windows vous demandra d'autoriser l'application, répondez oui.
+Windows vous demandra d'autoriser l'application, réponder oui.
 
 tapez "localhost:3000" sur un navigateur
